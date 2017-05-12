@@ -13,7 +13,7 @@ namespace Assets.Editor.Scripts.Build
 {
     class BuildXcode
     {
-        //[PostProcessBuild]
+        [PostProcessBuild]
         public static void OnPostprocessBuild(BuildTarget BuildTarget, string path)
         {
             if (BuildTarget == BuildTarget.iPhone)
@@ -26,19 +26,18 @@ namespace Assets.Editor.Scripts.Build
                 string target = proj.TargetGuidByName(PBXProject.GetUnityTargetName());
 
                 //对所有的编译配置设置选项  
-                proj.SetBuildProperty(target, "ENABLE_BITCODE", "NO");
-                proj.SetBuildProperty(target, "PRODUCT_BUNDLE_IDENTIFIER", "com.games.DFZJ.AppStore");
+//                proj.SetBuildProperty(target, "ENABLE_BITCODE", "NO");
+//                proj.SetBuildProperty(target, "PRODUCT_BUNDLE_IDENTIFIER", "com.games.DFZJ.AppStore");
                 proj.SetBuildProperty(target, "OTHER_LDFLAGS", "-ObjC -licucore");
 
                 //添加依赖库
-                proj.AddFrameworkToProject(target, "Security.framework", false);
-                proj.AddFrameworkToProject(target, "JavaScriptCore.framework", false);
+				proj.AddFrameworkToProject(target, "libiPhone-lib.a", false);
                 proj.AddFrameworkToProject(target, "libc++.1.tbd", false);
-                proj.AddFrameworkToProject(target, "libz.1.tbd", false);
+				proj.AddFrameworkToProject(target, "libsqlite3.tbd", false);
 
                 //设置签名  
-                proj.SetBuildProperty(target, "CODE_SIGN_IDENTITY", "iPhone Distribution: _______________");
-                proj.SetBuildProperty(target, "PROVISIONING_PROFILE", "********-****-****-****-************");
+//                proj.SetBuildProperty(target, "CODE_SIGN_IDENTITY", "iPhone Distribution: _______________");
+//                proj.SetBuildProperty(target, "PROVISIONING_PROFILE", "********-****-****-****-************");
 
                 //保存工程  
                 proj.WriteToFile(projPath);
@@ -78,22 +77,21 @@ namespace Assets.Editor.Scripts.Build
                 var dictWeiXin = urlTypes.AddDict();
                 dictWeiXin.SetString("CFBundleTypeRole", "Editor");
                 dictWeiXin.SetString("CFBundleURLName", "");
-                var dictWeiXinDic = dictWeibo.CreateArray("CFBundleURLSchemes");
+				var dictWeiXinDic = dictWeiXin.CreateArray("CFBundleURLSchemes");
                 dictWeiXinDic.AddString("wxb80d3faba4d24a1c");
 
                 //qq
                 var dictQQ1 = urlTypes.AddDict();
                 dictQQ1.SetString("CFBundleTypeRole", "Editor");
                 dictQQ1.SetString("CFBundleURLName", "");
-                var dictQQDic1 = dictWeibo.CreateArray("CFBundleURLSchemes");
+				var dictQQDic1 = dictQQ1.CreateArray("CFBundleURLSchemes");
                 dictQQDic1.AddString("tencent1105220627");
 
                 var dictQQ2 = urlTypes.AddDict();
                 dictQQ2.SetString("CFBundleTypeRole", "Editor");
                 dictQQ2.SetString("CFBundleURLName", "");
-                var dictQQDic2 = dictWeibo.CreateArray("CFBundleURLSchemes");
+				var dictQQDic2 = dictQQ2.CreateArray("CFBundleURLSchemes");
                 dictQQDic2.AddString("QQ1105220627");
-
 
                 // 保存plist  
                 plist.WriteToFile(plistPath);
